@@ -1,0 +1,11 @@
+venv/
+*.pyc
+.idea/
+__pycache__/
+*.py[cod]
+*.swp
+package-lock.json
+__pycache__
+.pytest_cache
+.venv/
+*.egg-info
