@@ -21,6 +21,7 @@ setup(
     packages=["cronrange"],
     license="MPL2.0",
     setup_requires=["wheel"],
+    install_requires=["croniter==3.0.3"],
     package_dir={"cronrange": "cronrange"},
     entry_points={
         "console_scripts": ["cronrange=cronrange.main:cli"],
