@@ -39,15 +39,20 @@ class TestCronRange(unittest.TestCase):
 
     @parameterized.expand(
         [
-            (2, "*/5 * * * *"),
-            (12, "15 14 1 * *"),
-            (5, "0 0 1,15 * *"),
+            (20, "*/5 * * * *"),
+            (6, "15 14 1 * *"),
+            (100, "0 0 1,15 * *"),
+            (10, "0 0 1,15 * *"),
             ("20", "59 0/12 * * ? *"),  # EventBridge-style
+            (30, "0/50 8-17 ? * THU-FRI *"),  # EventBridge-style
             (50, "0/50 8-17 ? * THU-FRI *"),  # EventBridge-style
+            (42, "0/50 8-17 ? * THU-FRI *"),  # EventBridge-style
             (1000, "0 8 1 * ? *"),  # EventBridge-style
         ]
     )
-    def test_get_multiple_cron_ranges(self, num_ranges, cron_expression):
+    def test_number_of_returned_executions_is_the_same_as_number_of_requested(
+        self, num_ranges, cron_expression
+    ):
         ranges = get_cron_range(num_ranges, cron_expression)
 
         self.assertEqual(int(num_ranges), len(ranges))
