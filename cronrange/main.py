@@ -116,25 +116,13 @@ def cli() -> None:
         ranges = get_cron_range(args.executions, args.cron, args.start_date)
 
         if args.output.lower() == "column":
-            print(
-                CronrangeOutput(
-                    executions=ranges, expression=args.cron, count=len(ranges)
-                ).to_column()
-            )
+            print(CronrangeOutput(executions=ranges).to_column())
 
         elif args.output.lower() == "json":
-            print(
-                CronrangeOutput(
-                    executions=ranges, expression=args.cron, count=len(ranges)
-                ).to_json()
-            )
+            print(CronrangeOutput(executions=ranges).to_json())
 
         else:
-            print(
-                CronrangeOutput(
-                    executions=ranges, expression=args.cron, count=len(ranges)
-                )
-            )
+            print(CronrangeOutput(executions=ranges))
 
     except Exception as ex:
         exit(ex)

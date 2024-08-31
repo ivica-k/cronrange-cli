@@ -5,8 +5,6 @@ from json import dumps
 @dataclass
 class CronrangeOutput:
     executions: list
-    expression: str
-    count: int
 
     def __str__(self):
         return self.to_text()
