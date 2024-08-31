@@ -1,6 +1,8 @@
 # examples taken from https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html
 # actual outputs obtained from AWS EventBridge rules https://eu-central-1.console.aws.amazon.com/events/home?region=eu-central-1#/rules/create
 
+EVENTBRIDGE_DATETIME_FMT = "%a, %d %b %Y %H:%M:%S"
+
 EVENTBRIDGE_OUTPUTS = {
     "0 8 1 * ? *": [
         "Sat, 01 Apr 2023 08:00:00",
@@ -135,5 +137,3 @@ EVENTBRIDGE_OUTPUTS = {
         "Mon, 29 Jul 2024 18:00:00",
     ],
 }
-
-EVENTBRIDGE_DATETIME_FMT = "%a, %d %b %Y %H:%M:%S"

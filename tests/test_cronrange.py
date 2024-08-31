@@ -1,5 +1,6 @@
 import unittest
 from datetime import datetime, timezone
+from typing import List, Union
 
 from cronrange import get_cron_range
 from cronrange.utils import convert_string_to_datetime, DATETIME_FORMAT
@@ -11,7 +12,9 @@ from tests.event_bridge import EVENTBRIDGE_OUTPUTS, EVENTBRIDGE_DATETIME_FMT
 
 
 class TestCronRange(unittest.TestCase):
-    def assertAllDatesEqual(self, cronrange_values, eventbridge_values):
+    def assertAllDatesEqual(
+        self, cronrange_values: List[str], eventbridge_values: List[str]
+    ):
         for pair in zip(cronrange_values, eventbridge_values):
 
             self.assertEqual(
@@ -26,7 +29,9 @@ class TestCronRange(unittest.TestCase):
             ("31.12.1999. 23:52", datetime(1999, 12, 31, 23, 52, 00)),
         ]
     )
-    def testconvert_string_to_datetime_success(self, input_string, expected_result):
+    def test_datetime_string_can_convert_to_datetime_object(
+        self, input_string: str, expected_result: datetime
+    ):
         actual_result = convert_string_to_datetime(input_string)
 
         self.assertEqual(actual_result, expected_result)
@@ -34,7 +39,9 @@ class TestCronRange(unittest.TestCase):
     @parameterized.expand(
         [("17:20 28.1.2018",), ("19:30 04.4.2018",), ("23:52 31.12.1999",)]
     )
-    def testconvert_string_to_datetime_fail(self, input_string):
+    def test_datetime_string_can_not_convert_to_datetime_object(
+        self, input_string: str
+    ):
         self.assertRaises(SystemExit, convert_string_to_datetime, input_string)
 
     @parameterized.expand(
@@ -51,7 +58,7 @@ class TestCronRange(unittest.TestCase):
         ]
     )
     def test_number_of_returned_executions_is_the_same_as_number_of_requested(
-        self, num_ranges, cron_expression
+        self, num_ranges: Union[str, int], cron_expression: str
     ):
         ranges = get_cron_range(num_ranges, cron_expression)
 
@@ -65,7 +72,7 @@ class TestCronRange(unittest.TestCase):
             ("*/5 * * , *",),
         ]
     )
-    def test_invalid_cron_expression(self, cron_expression):
+    def test_invalid_cron_expression_raises_an_exception(self, cron_expression: str):
         self.assertRaises(Exception, get_cron_range, 1, cron_expression)
 
     @parameterized.expand(
@@ -83,8 +90,8 @@ class TestCronRange(unittest.TestCase):
             ("0 18 ? * 2 *", "2024-5-26 22:20:00"),
         ]
     )
-    def test_get_cron_range_matches_event_bridge(
-        self, cron_expression, time_to_freeze="2023-3-12 18:00:00"
+    def test_get_cron_range_returns_the_same_datetime_as_eventbridge_ui(
+        self, cron_expression: str, time_to_freeze: str = "2023-3-12 18:00:00"
     ):
         with freeze_time(time_to_freeze):
             expected_values = EVENTBRIDGE_OUTPUTS.get(cron_expression)
