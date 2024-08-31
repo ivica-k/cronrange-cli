@@ -80,7 +80,7 @@ def get_cron_range(
     if isinstance(start_datetime, str):
         start_datetime = convert_string_to_datetime(start_datetime)
 
-    log.debug(
+    log.info(
         f"Getting {num_items} iterations for '{cron_expression}' starting at '{start_datetime}'"
     )
 

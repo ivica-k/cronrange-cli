@@ -45,7 +45,10 @@ def _convert_day_of_week_to_aws_format(day_of_week: str) -> str:
     if end in WEEKDAYS:
         end = WEEKDAYS[end]
 
-    return f"{int(start)-1}-{int(end)-1}"
+    day_of_week_unix_format = f"{int(start)-1}-{int(end)-1}"
+    log.debug(f"Converted day of week AWS format '{day_of_week}' to UNIX format '{day_of_week_unix_format}'")
+
+    return day_of_week_unix_format
 
 
 def handle_eventbridge_expression(cron_expression: str) -> str:
@@ -58,7 +61,7 @@ def handle_eventbridge_expression(cron_expression: str) -> str:
     # min	hour	day-of-month	month	day-of-week	year
     # 0/5	8-17	? 				*		MON-FRI 	*
 
-    # logger.info(f"Received EventBridge style cron expression '{cron_expression}'")
+    log.debug(f"Received EventBridge style cron expression '{cron_expression}'")
     minute, hour, day_of_month, month, day_of_week, year = cron_expression.split()
 
     # if the day of week is presented as a range such as 1-3 or MON-FRI
@@ -72,6 +75,6 @@ def handle_eventbridge_expression(cron_expression: str) -> str:
     compatible_expression = (
         f"{minute} {hour} {day_of_month} {month} {day_of_week}".replace("?", "*")
     )
-    # logger.debug(f"Converted to '{compatible_expression}'")
+    log.debug(f"Converted cron expression '{cron_expression}' to '{compatible_expression}'")
 
     return compatible_expression
