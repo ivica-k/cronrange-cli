@@ -4,7 +4,13 @@ import argparse
 from os import getenv
 
 from datetime import datetime
-from cronrange.utils import convert_string_to_datetime, handle_eventbridge_expression
+from typing import Union, List
+
+from cronrange.utils import (
+    convert_string_to_datetime,
+    handle_eventbridge_expression,
+    DATETIME_FORMAT,
+)
 from cronrange.output import CronrangeOutput
 
 from croniter import (
@@ -21,11 +27,14 @@ log_format = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(messa
 stream_handler = logging.StreamHandler()
 stream_handler.setFormatter(log_format)
 log.addHandler(stream_handler)
-DATETIME_FORMAT = "%d.%m.%Y. %H:%M"
 OUTPUT_CHOICES = ["column", "text", "json"]
 
 
-def parse_args():
+def parse_args() -> argparse.Namespace:
+    """
+    Parses CLI arguments.
+    :return: Parsed arguments
+    """
     parser = argparse.ArgumentParser()
 
     parser.add_argument("-c", "--cron", help="A valid cron expression", required=True)
@@ -56,11 +65,21 @@ def parse_args():
 
 
 def get_cron_range(
-    num_items, cron_expression, start_datetime=datetime.now().strftime(DATETIME_FORMAT)
-):
+    num_items: Union[str, int],
+    cron_expression: str,
+    start_datetime: Union[datetime, str] = datetime.now().strftime(DATETIME_FORMAT),
+) -> List[str]:
+    """
+    :param num_items: Number of cron executions to generate.
+    :param cron_expression: Valid cron expression.
+    :param start_datetime: Datetime from which to calculate the executions.
+    :return: List of datetime strings starting from `start_datetime`.
+    """
     cron_executions = []
+
     if isinstance(start_datetime, str):
         start_datetime = convert_string_to_datetime(start_datetime)
+
     log.debug(
         f"Getting {num_items} iterations for '{cron_expression}' starting at '{start_datetime}'"
     )
@@ -86,7 +105,11 @@ def get_cron_range(
         log.exception(ex)
 
 
-def cli():
+def cli() -> None:
+    """
+    Provides a CLI interface to `get_cron_range`
+    :return: None
+    """
     args = parse_args()
 
     try:

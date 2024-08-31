@@ -16,7 +16,12 @@ WEEKDAYS = {
 }
 
 
-def convert_string_to_datetime(datetime_string):
+def convert_string_to_datetime(datetime_string: str) -> datetime:
+    f"""
+    Converts a datetime string to a datetime object.
+    :param datetime_string: Datetime string to convert to the {DATETIME_FORMAT} format
+    :return: 
+    """
     log.debug(f"Converting '{datetime_string}' to datetime object")
     try:
         return datetime.strptime(datetime_string, DATETIME_FORMAT)
@@ -26,11 +31,11 @@ def convert_string_to_datetime(datetime_string):
         sys.exit(1)
 
 
-def _convert_day_of_week_to_aws_format(day_of_week: str):
+def _convert_day_of_week_to_aws_format(day_of_week: str) -> str:
     """
-    Converts AWS day_of_week format (1-7) to cron format (0-6)
-    :param day_of_week:
-    :return: `day_of_week` formatted in 0-6 notation
+    Converts EventBridge day_of_week format (1-7) to cron format (0-6)
+    :param day_of_week: day_of_week formatted in 1-7 notation (EventBridge)
+    :return: day_of_week formatted in 0-6 notation
     """
     start, end = day_of_week.split("-")
 
@@ -43,7 +48,12 @@ def _convert_day_of_week_to_aws_format(day_of_week: str):
     return f"{int(start)-1}-{int(end)-1}"
 
 
-def handle_eventbridge_expression(cron_expression):
+def handle_eventbridge_expression(cron_expression: str) -> str:
+    """
+    Converts Event-bridge style cron expression into a UNIX-compatible cron expression
+    :param cron_expression: Event-bridge style cron expression
+    :return: UNIX-compatible cron expression
+    """
     # EventBridge cron expression composition
     # min	hour	day-of-month	month	day-of-week	year
     # 0/5	8-17	? 				*		MON-FRI 	*
